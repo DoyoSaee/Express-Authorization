@@ -5,8 +5,8 @@
   "description": "Monorepo with JWT (4000) and Passport (5000)",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:jwt": "node apps/jwt/index.js",
-    "start:passport": "node apps/passport/index.js"
+    "dev:jwt": "node apps/jwt/index.js",
+    "dev:passport": "node apps/passport/index.js"
   },
   "keywords": [],
   "author": "",
