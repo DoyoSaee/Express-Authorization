@@ -1,14 +1,18 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+
 app.use(express.urlencoded({ extended: true }));
 
 app.listen(4000, () => {
   console.log("Server is running on port 4000");
 });
+let refreshTokens = [];
 
 // login
 app.get("/login", (req, res) => {
@@ -16,25 +20,68 @@ app.get("/login", (req, res) => {
     .status(405)
     .json({ error: 'Use POST /login with body { "userName": "..." }' });
 });
+
+// login
 app.post("/login", (req, res) => {
   const { userName } = req.body || {};
-
   if (!userName) {
     return res
       .status(400)
       .json({ error: 'Missing "userName" in request body' });
   }
-
   if (!process.env.ACCESS_TOKEN_SECRET) {
     return res
       .status(500)
       .json({ error: "Server misconfigured: ACCESS_TOKEN_SECRET not set" });
   }
-
   const user = { name: userName };
-  // jwt sign
-  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-  res.json({ accessToken });
+  //accessToken 생성
+  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "30s",
+  });
+  //refreshToken 생성
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: "1d",
+  });
+  //refreshToken을 메모리에 저장
+  refreshTokens.push(refreshToken);
+  //refreshToken을 cookie에 저장
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    // secure: true,
+    // sameSite: "strict",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  //accessToken 반환
+  res.json({ accessToken: accessToken });
+});
+
+//refreshToken으로 accessToken 재발급
+app.post("/refresh", (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  //refreshToken이 없으면
+  if (!refreshToken) {
+    return res.status(401).json({ error: "Missing refresh token" });
+  }
+  //REFRESH_TOKEN_SECRET이 없으면
+  if (!process.env.REFRESH_TOKEN_SECRET) {
+    return res
+      .status(500)
+      .json({ error: "Server misconfigured: REFRESH_TOKEN_SECRET not set" });
+  }
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const accessToken = jwt.sign(
+      { name: decoded.name },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "30s",
+      }
+    );
+    res.json({ accessToken: accessToken });
+  } catch (error) {
+    return res.status(401).json({ error: "Invalid refresh token" });
+  }
 });
 
 //인증 미들웨어
