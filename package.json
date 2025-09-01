@@ -1,12 +1,12 @@
 {
   "name": "Express-Authorization",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Monorepo with JWT (4000) and Passport (5000)",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start:jwt": "node apps/jwt/index.js",
+    "start:passport": "node apps/passport/index.js"
   },
   "keywords": [],
   "author": "",

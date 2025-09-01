@@ -1,5 +1,15 @@
 # ExpressServer
 
+Note: The project is now split into a lightweight monorepo with two apps:
+
+- apps/jwt: JWT-based server on port 4000
+- apps/passport: Passport-based server on port 5000
+
+Run:
+
+- pnpm start:jwt -> starts JWT app (uses apps/jwt/.env)
+- pnpm start:passport -> starts Passport app
+
 **Express 기반 인증/인가 시스템 템플릿**  
 JWT와 Passport 모듈을 활용해 로그인/회원가입, 세션 관리, 토큰 인증을 구현하고  
 구글/카카오 소셜 로그인(OAuth)을 포함하는 기본 템플릿 프로젝트입니다.
