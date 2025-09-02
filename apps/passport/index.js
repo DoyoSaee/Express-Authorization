@@ -1,6 +1,7 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const app = express();
 const User = require("./models/users.model");
 const passport = require("passport");
@@ -34,11 +35,15 @@ app.use((req, res, next) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-//MongoDB 연결
+// MongoDB 연결 (환경변수 사용)
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  console.error("❌ Missing MONGODB_URI. Set it in apps/passport/.env");
+  process.exit(1);
+}
+
 mongoose
-  .connect(
-    "mongodb+srv://root:ucBlLQL3hDcXGepq@express.6x1tpgr.mongodb.net/?retryWrites=true&w=majority&appName=Express"
-  )
+  .connect(mongoUri)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 app.use("/static", express.static(path.join(__dirname, "public")));

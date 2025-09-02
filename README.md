@@ -44,14 +44,12 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 
 ### apps/passport (포트 3500)
 
-- LocalStrategy 데모(세션 미사용)
-- 데모 계정: username=`test`, password=`secret`
-- 엔드포인트
-  - `GET /health`: 서버 상태
-  - `POST /login`: body: `{ "username": "test", "password": "secret" }`
-  - `POST /protected`: 데모용 보호 라우트(요청마다 동일한 자격증명 필요)
+- 환경변수 파일: `apps/passport/.env`
+  - `MONGODB_URI`: MongoDB 연결 문자열
+- LocalStrategy 데모(세션/뷰 사용)
+- 엔드포인트 예시: 로그인/회원가입/성공 페이지 등
 - 확장 아이디어
-  - 세션/쿠키 기반 로그인(`passport.session()`, serialize/deserialize)
+  - 세션/쿠키 기반 로그인 고도화(`passport.session()`, serialize/deserialize)
   - OAuth 추가(Google 등)
   - 로그인 성공 시 JWT 발급하여 JWT 서버와 연계
 

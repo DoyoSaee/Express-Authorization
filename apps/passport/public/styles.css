@@ -5,6 +5,7 @@
   --muted: #8a94a6;
   --text: #e7ecf3;
   --primary: #6da8ff;
+  --primary-400: #80b6ff;
   --primary-600: #5198ff;
   --ring: rgba(109, 168, 255, 0.35);
   --danger: #ff6b6b;
@@ -162,7 +163,8 @@ body {
 }
 
 .btn-primary:hover {
-  filter: brightness(1.05);
+  /* 밝게 느껴지도록 hover 시 그라디언트를 한 단계 연하게 */
+  background: linear-gradient(180deg, var(--primary-400), var(--primary));
 }
 
 .btn-primary:focus {
@@ -204,4 +206,3 @@ body {
     padding: 8px 20px 20px;
   }
 }
-
