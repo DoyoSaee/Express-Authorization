@@ -1,0 +1,207 @@
+/* Shared design system for Passport EJS views */
+:root {
+  --bg: #0b1020;
+  --card: #121830;
+  --muted: #8a94a6;
+  --text: #e7ecf3;
+  --primary: #6da8ff;
+  --primary-600: #5198ff;
+  --ring: rgba(109, 168, 255, 0.35);
+  --danger: #ff6b6b;
+  --radius: 14px;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+    "Noto Sans KR", Arial, sans-serif;
+  color: var(--text);
+  background: radial-gradient(80rem 80rem at 10% -10%, #1b2350 0%, #0b1020 60%),
+    radial-gradient(70rem 70rem at 120% 10%, #16203f 0%, #0b1020 70%),
+    var(--bg);
+}
+
+.container {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent),
+    var(--card);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.auth-header {
+  padding: 28px 28px 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.brand-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-600));
+  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35);
+  display: grid;
+  place-items: center;
+  color: #0a0f20;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.auth-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.auth-subtitle {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.auth-body {
+  padding: 8px 28px 24px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.input::placeholder {
+  color: #95a1b3;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--ring);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.06s ease, background-color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--primary), var(--primary-600));
+  color: #0a0f20;
+  border: 0;
+  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35), 0 0 0 4px var(--ring);
+}
+
+.helper {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.link {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 107, 107, 0.08);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  color: #ffd9d9;
+}
+
+/* Small screen tweaks */
+@media (max-width: 420px) {
+  .auth-header {
+    padding: 24px 20px 8px;
+  }
+  .auth-body {
+    padding: 8px 20px 20px;
+  }
+}
+

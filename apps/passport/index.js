@@ -1,60 +1,123 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
-const dotenv = require("dotenv");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+const { default: mongoose } = require("mongoose");
 const path = require("path");
-
-dotenv.config({ path: path.join(__dirname, ".env") });
-
 const app = express();
+const User = require("./models/users.model");
+const passport = require("passport");
+require("./config/passport");
+const cookieSession = require("cookie-session");
+
+const cookieEncryptionKey = "supersecretKey";
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
+app.use(
+  cookieSession({
+    name: "session",
+    keys: [cookieEncryptionKey],
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  })
+);
+
+// cookie-session lacks regenerate/save used by Passport; shim them.
+app.use((req, res, next) => {
+  if (req.session && typeof req.session.regenerate !== "function") {
+    req.session.regenerate = (cb) => cb && cb();
+  }
+  if (req.session && typeof req.session.save !== "function") {
+    req.session.save = (cb) => cb && cb();
+  }
+  next();
+});
+
+// Initialize Passport (must come after sessions)
 app.use(passport.initialize());
+app.use(passport.session());
 
-// Simple in-memory user for demo
-const DEMO_USER = { id: 1, username: "test", password: "secret", name: "Test User" };
-
-passport.use(
-  new LocalStrategy(
-    { usernameField: "username", passwordField: "password" },
-    (username, password, done) => {
-      // Replace this with real user lookup and password check
-      if (username === DEMO_USER.username && password === DEMO_USER.password) {
-        return done(null, { id: DEMO_USER.id, username: DEMO_USER.username, name: DEMO_USER.name });
-      }
-      return done(null, false, { message: "Invalid credentials" });
-    }
+//MongoDB 연결
+mongoose
+  .connect(
+    "mongodb+srv://root:ucBlLQL3hDcXGepq@express.6x1tpgr.mongodb.net/?retryWrites=true&w=majority&appName=Express"
   )
-);
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
+app.use("/static", express.static(path.join(__dirname, "public")));
 
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ ok: true });
+//vies engine
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+//passport
+app.listen(3500, () => {
+  console.log("Passport server is running on port 3500");
 });
 
-// Login route using passport-local (no sessions)
-app.post(
-  "/login",
-  passport.authenticate("local", { session: false }),
-  (req, res) => {
-    // If we are here, authentication succeeded
-    res.json({ message: "Logged in", user: req.user });
-  }
-);
-
-// Example protected route using the same local strategy inline (for demo only)
-// In real apps, you'd use sessions or issue JWTs after login.
-app.post(
-  "/protected",
-  passport.authenticate("local", { session: false }),
-  (req, res) => {
-    res.json({ message: "Access granted", user: req.user });
-  }
-);
-
-app.listen(5000, () => {
-  console.log("Passport server is running on port 5000");
+// 기본 라우트: 로그인 상태 표시
+app.get("/", (req, res) => {
+  res.render("index", { user: req.user || null });
 });
 
+//login
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
+//login post
+app.post("/login", (req, res, next) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) {
+    return res.status(400).render("login", { error: "이메일과 비밀번호를 모두 입력하세요." });
+  }
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Auth error:", err);
+      return res.status(500).render("login", { error: err && err.message ? err.message : "서버 오류로 로그인에 실패했습니다." });
+    }
+    if (!user) {
+      const message = (info && info.message) || "이메일 또는 비밀번호가 올바르지 않습니다.";
+      return res.status(401).render("login", { error: message });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Login error:", err);
+        return res.status(500).render("login", { error: "세션 생성 중 오류가 발생했습니다." });
+      }
+      return res.redirect("/success");
+    });
+  })(req, res, next);
+});
+
+//signup
+app.get("/signup", (req, res) => {
+  res.render("signup");
+});
+
+//signup post
+app.post("/signup", async (req, res) => {
+  //user 객체를 생성
+  const user = new User(req.body);
+  try {
+    await user.save();
+    res.redirect("/login");
+  } catch (err) {
+    console.error(err);
+    const message = err && err.code === 11000 ? "이미 등록된 이메일입니다." : "회원가입 중 오류가 발생했습니다.";
+    res.status(400).render("signup", { error: message });
+  }
+});
+
+//logout
+app.get("/logout", (req, res, next) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    // cookie-session 사용 시 세션 쿠키 제거
+    req.session = null;
+    res.redirect("/");
+  });
+});
+
+// success page (after login)
+app.get("/success", (req, res) => {
+  if (!req.user) return res.redirect("/login");
+  res.render("success", { user: req.user });
+});

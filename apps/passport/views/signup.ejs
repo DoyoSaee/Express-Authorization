@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign Up · Passport</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <section class="auth-card" aria-label="회원가입">
+        <header class="auth-header">
+          <div class="brand">
+            <div class="brand-badge" aria-hidden="true">PA</div>
+            <div>
+              <h1 class="auth-title">회원가입</h1>
+              <p class="auth-subtitle">새로운 계정을 만들어 시작하세요</p>
+            </div>
+          </div>
+        </header>
+        <div class="auth-body">
+          <% if (typeof error !== 'undefined' && error) { %>
+          <div class="error" role="alert"><%= error %></div>
+          <% } %>
+          <form class="form" action="/signup" method="post">
+            <div class="form-group">
+              <label class="label" for="email">이메일</label>
+              <input
+                class="input"
+                id="email"
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+            <div class="form-group">
+              <label class="label" for="password">비밀번호</label>
+              <input
+                class="input"
+                id="password"
+                type="password"
+                name="password"
+                placeholder="최소 4자"
+                minlength="4"
+                required
+                autocomplete="new-password"
+              />
+            </div>
+            <button class="btn btn-primary" type="submit">회원가입</button>
+          </form>
+          <p class="helper">
+            이미 계정이 있으신가요?
+            <a class="link" href="/login">로그인</a>
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
