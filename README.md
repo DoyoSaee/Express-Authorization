@@ -57,6 +57,18 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 
 ## UI 스크린샷 (Passport)
 
+- 홈(최초 진입, 비로그인):
+
+  ![Passport Index (logged out)](apps/passport/public/index.png)
+
+- 홈(로그인 상태):
+
+  ![Passport Index (authenticated)](apps/passport/public/index(auth).png)
+
+- 로그인 성공 화면:
+
+  ![Passport Success](apps/passport/public/success.png)
+
 - 로그인 화면:
 
   ![Passport Login](apps/passport/public/login.png)
