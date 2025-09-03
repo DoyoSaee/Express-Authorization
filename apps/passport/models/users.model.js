@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 // email, password 로그인  => googleId null
 // googleId 로그인         => email null
@@ -9,16 +10,22 @@ const userSchema = mongoose.Schema({
   googleId: { type: String, unique: true, sparse: true },
 });
 
-// comparePassword (demo only: plain text)
-// NOTE: Replace with bcrypt hashing for production use.
+//비밀번호 비교
 userSchema.methods.comparePassword = function (candidate, callback) {
-  try {
-    const isMatch = this.password === candidate;
-    callback(null, isMatch);
-  } catch (err) {
-    callback(err);
-  }
+  bcrypt.compare(candidate, this.password, callback);
 };
+
+//비밀번호 암호화
+userSchema.pre("save", function (next) {
+  let user = this;
+  if (user.isModified("password")) {
+    bcrypt.hash(user.password, 10, function (err, hash) {
+      if (err) return next(err);
+      user.password = hash;
+      next();
+    });
+  }
+});
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

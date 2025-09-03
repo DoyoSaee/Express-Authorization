@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
@@ -15,26 +15,25 @@
             <div>
               <h1 class="auth-title">Passport Demo</h1>
               <p class="auth-subtitle">
-                <% if (user) { %>
-                  <%= user.email %> 로 로그인됨
-                <% } else { %>
-                  로그인하거나 회원가입해 시작하세요
-                <% } %>
+                <% if (user) { %> <%= user.email %> 로 로그인됨 <% } else { %>
+                로그인하거나 회원가입해 시작하세요 <% } %>
               </p>
             </div>
           </div>
         </header>
         <div class="auth-body">
           <% if (user) { %>
-            <a class="btn" href="/logout">로그아웃</a>
+          <form action="/logout" method="post">
+            <button type="submit" class="btn">로그아웃</button>
+          </form>
           <% } else { %>
-            <div class="form" style="grid-template-columns: 1fr 1fr;">
-              <a class="btn btn-primary" href="/login">로그인</a>
-              <a class="btn" href="/signup">회원가입</a>
-            </div>
+          <div class="form" style="grid-template-columns: 1fr 1fr">
+            <a class="btn btn-primary" href="/login">로그인</a>
+            <a class="btn" href="/signup">회원가입</a>
+          </div>
           <% } %>
         </div>
       </section>
     </main>
   </body>
-  </html>
+</html>

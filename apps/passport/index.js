@@ -126,13 +126,26 @@ app.post("/signup", authMiddleware.checkNotAuthenticated, async (req, res) => {
   }
 });
 
-//logout
-app.get("/logout", authMiddleware.checkAuthenticated, (req, res, next) => {
-  req.logout((err) => {
-    if (err) return next(err);
-    // cookie-session 사용 시 세션 쿠키 제거
+// logout (POST preferred)
+app.post("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    // Clear cookie-session explicitly to fully remove session cookie
     req.session = null;
-    res.redirect("/");
+    res.redirect("/login");
+  });
+});
+
+// logout (GET for convenience; optional)
+app.get("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.session = null;
+    res.redirect("/login");
   });
 });
 
