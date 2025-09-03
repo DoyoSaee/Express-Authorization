@@ -6,6 +6,8 @@ const app = express();
 const User = require("./models/users.model");
 const passport = require("passport");
 require("./config/passport");
+const authMiddleware = require("./middlewares/auth");
+
 const cookieSession = require("cookie-session");
 
 const cookieEncryptionKey = "supersecretKey";
@@ -58,34 +60,44 @@ app.listen(3500, () => {
 });
 
 // 기본 라우트: 로그인 상태 표시
-app.get("/", (req, res) => {
+app.get("/", authMiddleware.checkNotAuthenticated, (req, res) => {
   res.render("index", { user: req.user || null });
 });
 
 //login
-app.get("/login", (req, res) => {
+app.get("/login", authMiddleware.checkNotAuthenticated, (req, res) => {
   res.render("login");
 });
 
 //login post
-app.post("/login", (req, res, next) => {
+app.post("/login", authMiddleware.checkNotAuthenticated, (req, res, next) => {
   const { email, password } = req.body || {};
   if (!email || !password) {
-    return res.status(400).render("login", { error: "이메일과 비밀번호를 모두 입력하세요." });
+    return res
+      .status(400)
+      .render("login", { error: "이메일과 비밀번호를 모두 입력하세요." });
   }
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error("Auth error:", err);
-      return res.status(500).render("login", { error: err && err.message ? err.message : "서버 오류로 로그인에 실패했습니다." });
+      return res.status(500).render("login", {
+        error:
+          err && err.message
+            ? err.message
+            : "서버 오류로 로그인에 실패했습니다.",
+      });
     }
     if (!user) {
-      const message = (info && info.message) || "이메일 또는 비밀번호가 올바르지 않습니다.";
+      const message =
+        (info && info.message) || "이메일 또는 비밀번호가 올바르지 않습니다.";
       return res.status(401).render("login", { error: message });
     }
     req.logIn(user, (err) => {
       if (err) {
         console.error("Login error:", err);
-        return res.status(500).render("login", { error: "세션 생성 중 오류가 발생했습니다." });
+        return res
+          .status(500)
+          .render("login", { error: "세션 생성 중 오류가 발생했습니다." });
       }
       return res.redirect("/success");
     });
@@ -93,12 +105,12 @@ app.post("/login", (req, res, next) => {
 });
 
 //signup
-app.get("/signup", (req, res) => {
+app.get("/signup", authMiddleware.checkNotAuthenticated, (req, res) => {
   res.render("signup");
 });
 
 //signup post
-app.post("/signup", async (req, res) => {
+app.post("/signup", authMiddleware.checkNotAuthenticated, async (req, res) => {
   //user 객체를 생성
   const user = new User(req.body);
   try {
@@ -106,13 +118,16 @@ app.post("/signup", async (req, res) => {
     res.redirect("/login");
   } catch (err) {
     console.error(err);
-    const message = err && err.code === 11000 ? "이미 등록된 이메일입니다." : "회원가입 중 오류가 발생했습니다.";
+    const message =
+      err && err.code === 11000
+        ? "이미 등록된 이메일입니다."
+        : "회원가입 중 오류가 발생했습니다.";
     res.status(400).render("signup", { error: message });
   }
 });
 
 //logout
-app.get("/logout", (req, res, next) => {
+app.get("/logout", authMiddleware.checkAuthenticated, (req, res, next) => {
   req.logout((err) => {
     if (err) return next(err);
     // cookie-session 사용 시 세션 쿠키 제거
@@ -122,7 +137,7 @@ app.get("/logout", (req, res, next) => {
 });
 
 // success page (after login)
-app.get("/success", (req, res) => {
+app.get("/success", authMiddleware.checkAuthenticated, (req, res) => {
   if (!req.user) return res.redirect("/login");
   res.render("success", { user: req.user });
 });
