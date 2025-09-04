@@ -157,3 +157,12 @@ app.get("/success", authMiddleware.checkAuthenticated, (req, res) => {
 
 //google login
 app.get("/auth/google", passport.authenticate("google", { scope: ["email"] }));
+
+//google callback
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/success");
+  }
+);

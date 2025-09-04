@@ -1,14 +1,17 @@
 /* Shared design system for Passport EJS views */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
 :root {
-  --bg: #0b1020;
-  --card: #121830;
-  --muted: #8a94a6;
-  --text: #e7ecf3;
-  --primary: #6da8ff;
-  --primary-400: #80b6ff;
-  --primary-600: #5198ff;
-  --ring: rgba(109, 168, 255, 0.35);
-  --danger: #ff6b6b;
+  /* Pink/Violet dark theme */
+  --bg: #120a17;
+  --card: #1a1122;
+  --muted: #b9a8c6;
+  --text: #f7ecf5;
+  --primary: #ff7ab6;
+  --primary-400: #ff9cc8;
+  --primary-600: #ff589e;
+  --ring: rgba(255, 122, 182, 0.35);
+  --danger: #ff6b9c;
   --radius: 14px;
   --shadow: 0 10px 25px rgba(0, 0, 0, 0.35), 0 2px 10px rgba(0, 0, 0, 0.2);
 }
@@ -24,13 +27,13 @@ body {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
-    "Noto Sans KR", Arial, sans-serif;
+  font-family: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Fira Sans", "Droid Sans", "Helvetica Neue", "Noto Sans KR", Arial,
+    sans-serif;
   color: var(--text);
-  background: radial-gradient(80rem 80rem at 10% -10%, #1b2350 0%, #0b1020 60%),
-    radial-gradient(70rem 70rem at 120% 10%, #16203f 0%, #0b1020 70%),
-    var(--bg);
+  background: radial-gradient(80rem 80rem at 10% -10%, #361635 0%, #120a17 60%),
+    radial-gradient(70rem 70rem at 120% 10%, #2a1431 0%, #120a17 70%), var(--bg);
 }
 
 .container {
@@ -63,16 +66,27 @@ body {
 }
 
 .brand-badge {
-  width: 36px;
+  width: 120px;
   height: 36px;
   border-radius: 10px;
+  margin-bottom: 10px;
   background: linear-gradient(135deg, var(--primary), var(--primary-600));
-  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35);
+  box-shadow: 0 8px 18px rgba(255, 122, 182, 0.35);
   display: grid;
   place-items: center;
-  color: #0a0f20;
+  color: #240916;
   font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+/* Image logo usage */
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(255, 122, 182, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-title {
@@ -157,9 +171,9 @@ body {
 
 .btn-primary {
   background: linear-gradient(180deg, var(--primary), var(--primary-600));
-  color: #0a0f20;
+  color: #240916;
   border: 0;
-  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35);
+  box-shadow: 0 8px 18px rgba(255, 122, 182, 0.35);
 }
 
 .btn-primary:hover {
@@ -168,7 +182,7 @@ body {
 }
 
 .btn-primary:focus {
-  box-shadow: 0 8px 18px rgba(109, 168, 255, 0.35), 0 0 0 4px var(--ring);
+  box-shadow: 0 8px 18px rgba(255, 122, 182, 0.35), 0 0 0 4px var(--ring);
 }
 
 .helper {
@@ -192,9 +206,24 @@ body {
 .error {
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 107, 107, 0.08);
-  border: 1px solid rgba(255, 107, 107, 0.25);
-  color: #ffd9d9;
+  background: rgba(255, 107, 156, 0.08);
+  border: 1px solid rgba(255, 107, 156, 0.25);
+  color: #ffd9e6;
+}
+
+/* Google button: white tone */
+.btn-google {
+  background: #ffffff;
+  color: #1f1f1f;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.btn-google:hover {
+  background: #fafafa;
+}
+
+.btn-google:focus {
+  box-shadow: 0 0 0 4px rgba(255, 122, 182, 0.25);
 }
 
 /* Small screen tweaks */

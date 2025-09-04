@@ -24,6 +24,9 @@ userSchema.pre("save", function (next) {
       user.password = hash;
       next();
     });
+  } else {
+    // Ensure next() is called when password isn't modified
+    next();
   }
 });
 
