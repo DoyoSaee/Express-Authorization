@@ -59,8 +59,8 @@ app.listen(3500, () => {
   console.log("Passport server is running on port 3500");
 });
 
-// 기본 라우트: 로그인 상태 표시
-app.get("/", authMiddleware.checkNotAuthenticated, (req, res) => {
+// 기본 라우트: 로그인 상태 표시 (누구나 접속 가능)
+app.get("/", (req, res) => {
   res.render("index", { user: req.user || null });
 });
 
@@ -154,3 +154,6 @@ app.get("/success", authMiddleware.checkAuthenticated, (req, res) => {
   if (!req.user) return res.redirect("/login");
   res.render("success", { user: req.user });
 });
+
+//google login
+app.get("/auth/google", passport.authenticate("google", { scope: ["email"] }));
