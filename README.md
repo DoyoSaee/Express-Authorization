@@ -19,7 +19,21 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 │   │   ├── .env              # ACCESS/REFRESH 토큰 시크릿
 │   │   └── package.json
 │   └── passport/
-│       ├── index.js          # Passport(Local) 서버 (3500)
+│       ├── index.js          # Passport(Local/OAuth) 서버 (3500)
+│       ├── config/
+│       │   └── passport.js   # Local + Google 전략 설정
+│       ├── controllers/
+│       │   ├── users.controller.js
+│       │   └── posts.controller.js (stub)
+│       ├── routes/
+│       │   ├── main.router.js
+│       │   └── users.router.js
+│       ├── models/
+│       │   └── users.model.js
+│       ├── middlewares/
+│       │   └── auth.js
+│       ├── views/            # EJS 템플릿
+│       ├── public/           # 정적 파일
 │       └── package.json
 ├── package.json               # 루트 스크립트
 ├── pnpm-workspace.yaml        # 워크스페이스 설정
@@ -74,6 +88,10 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 - 회원가입 화면:
 
   ![Passport Signup](apps/passport/public/signup.png)
+
+- MongoDB users 컬렉션(구글 로그인, 비밀번호 제거):
+
+  ![MongoDB Data (Google Login)](apps/passport/public/mogodata.png)
 
 ## 참고 사항
 
