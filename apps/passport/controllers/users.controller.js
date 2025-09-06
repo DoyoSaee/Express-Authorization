@@ -92,13 +92,63 @@ function googleAuthStart(req, res, next) {
 
 // GET /auth/google/callback
 function googleCallback(req, res, next) {
-  return passport.authenticate("google", { failureRedirect: "/login" })(
-    req,
-    res,
-    function () {
-      res.redirect("/");
+  return passport.authenticate("google", (err, user, info) => {
+    if (err) {
+      console.error("Google auth error:", err);
+      return res
+        .status(500)
+        .render("login", { error: "구글 로그인 중 오류가 발생했습니다." });
     }
-  );
+    if (!user) {
+      const message =
+        (info && info.message) || "구글 인증에 실패했습니다. 로그인 다시 시도해주세요.";
+      return res.status(401).render("login", { error: message });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Google login session error:", err);
+        return res
+          .status(500)
+          .render("login", { error: "세션 생성 중 오류가 발생했습니다." });
+      }
+      return res.redirect("/success");
+    });
+  })(req, res, next);
+}
+
+// GET /auth/kakao
+function kakaoAuthStart(req, res, next) {
+  // Request email and nickname to improve profile data
+  return passport.authenticate("kakao", {
+    scope: ["account_email", "profile_nickname"],
+  })(req, res, next);
+}
+
+// GET /auth/kakao/callback
+function kakaoCallback(req, res, next) {
+  return passport.authenticate("kakao", (err, user, info) => {
+    if (err) {
+      console.error("Kakao auth error:", err);
+      return res
+        .status(500)
+        .render("login", { error: "카카오 로그인 중 오류가 발생했습니다." });
+    }
+    if (!user) {
+      const message =
+        (info && info.message) ||
+        "카카오 인증에 실패했습니다. (Redirect URI / 앱 설정 확인)";
+      return res.status(401).render("login", { error: message });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error("Kakao login session error:", err);
+        return res
+          .status(500)
+          .render("login", { error: "세션 생성 중 오류가 발생했습니다." });
+      }
+      return res.redirect("/success");
+    });
+  })(req, res, next);
 }
 
 module.exports = {
@@ -110,5 +160,6 @@ module.exports = {
   logoutGet,
   googleAuthStart,
   googleCallback,
+  kakaoAuthStart,
+  kakaoCallback,
 };
-

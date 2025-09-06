@@ -13,11 +13,14 @@ router.post("/signup", auth.checkNotAuthenticated, users.signup);
 
 // Logout
 router.post("/logout", users.logoutPost);
-router.get("/logout", users.logoutGet); // convenience
+router.get("/logout", users.logoutGet);
 
 // Google OAuth
 router.get("/auth/google", users.googleAuthStart);
 router.get("/auth/google/callback", users.googleCallback);
 
-module.exports = router;
+// Kakao OAuth
+router.get("/auth/kakao", users.kakaoAuthStart);
+router.get("/auth/kakao/callback", users.kakaoCallback);
 
+module.exports = router;

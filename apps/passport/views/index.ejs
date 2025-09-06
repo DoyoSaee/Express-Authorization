@@ -15,7 +15,7 @@
             <div>
               <h1 class="auth-title">Passport Demo</h1>
               <p class="auth-subtitle">
-                <% if (user) { %> <%= user.email %> 로 로그인됨 <% } else { %>
+                <% if (user) { %> <%= (user.name || user.email || '사용자') %> 로 로그인됨 <% } else { %>
                 로그인하거나 회원가입해 시작하세요 <% } %>
               </p>
             </div>

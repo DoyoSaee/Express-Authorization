@@ -64,8 +64,25 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 - 엔드포인트 예시: 로그인/회원가입/성공 페이지 등
 - 확장 아이디어
   - 세션/쿠키 기반 로그인 고도화(`passport.session()`, serialize/deserialize)
-  - OAuth 추가(Google 등)
+  - OAuth 추가(Google, Kakao)
   - 로그인 성공 시 JWT 발급하여 JWT 서버와 연계
+
+#### Google 최초 회원가입 환영 메일 발송
+
+- 동작: Google OAuth로 신규 사용자가 처음 생성될 때만 환영 메일을 발송합니다.
+- 템플릿/전송:
+  - 템플릿: `apps/passport/mail/welcome_template.js`
+  - 전송기: `apps/passport/mail/mail.js` (Nodemailer, Gmail 사용)
+- 보낸사람 표시: `GMAIL_FROM_NAME`가 있으면 `GMAIL_FROM_NAME <GMAIL_USER>` 형식으로 발송됩니다.
+- 환경변수(`apps/passport/.env`):
+  - `GMAIL_USER=your_gmail@gmail.com`
+  - `GMAIL_PASS=app_password` (Google 계정 2단계 인증 후 생성한 앱 비밀번호)
+  - `GMAIL_FROM_NAME=서비스명` (선택)
+- 참고: 기존 계정(이미 생성된 사용자)으로 로그인하거나 구글 계정을 로컬 계정에 “연동”만 하는 경우에는 메일을 보내지 않습니다.
+
+예시 스크린샷:
+
+![Google Welcome Mail](apps/passport/public/googleMail.png)
 
 ## UI 스크린샷 (Passport)
 

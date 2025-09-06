@@ -7,7 +7,11 @@ const bcrypt = require("bcrypt");
 const userSchema = mongoose.Schema({
   email: { type: String, unique: true },
   password: { type: String, minlength: 4 },
+  name: { type: String }, // display name / nickname from providers
   googleId: { type: String, unique: true, sparse: true },
+  kakaoId: { type: String, unique: true, sparse: true },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date },
 });
 
 //비밀번호 비교

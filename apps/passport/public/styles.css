@@ -226,6 +226,21 @@ body {
   box-shadow: 0 0 0 4px rgba(255, 122, 182, 0.25);
 }
 
+/* Kakao button: yellow tone */
+.btn-kakao {
+  background: #fee500;
+  color: #191600;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.btn-kakao:hover {
+  background: #fada0a;
+}
+
+.btn-kakao:focus {
+  box-shadow: 0 0 0 4px rgba(254, 229, 0, 0.35);
+}
+
 /* Small screen tweaks */
 @media (max-width: 420px) {
   .auth-header {
