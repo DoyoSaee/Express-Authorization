@@ -113,7 +113,7 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 
 - 홈(로그인 상태):
 
-  ![Passport Index (authenticated)](apps/passport/public/index(auth).png)
+  ![Passport Index (authenticated)](<apps/passport/public/index(auth).png>)
 
 - 로그인 성공 화면:
 
@@ -142,3 +142,4 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 - Google/Kakao OAuth 연동 고도화(프로필/동의 항목 최적화)
 - JWT Refresh Token 저장 전략(DB/Redis) 실험
 - 역할(Role) 기반 접근 제어(RBAC) 적용
+- mysql DB변경
