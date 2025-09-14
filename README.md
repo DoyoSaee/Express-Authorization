@@ -158,6 +158,7 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
   - `DELETE /users/:id`: 소프트 삭제 → `status = 'DELETED'`
 
 소프트 삭제 정책
+
 - 실제 레코드는 삭제하지 않고 `status` 값을 `DELETED`로 변경합니다.
 - 조회 시에는 `ACTIVE`(또는 과거 데이터의 `NULL`)만 노출합니다.
 - 필요 시 복구는 `status = 'ACTIVE'`로 되돌리면 됩니다.
@@ -174,3 +175,5 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
 - JWT Refresh Token 저장 전략(DB/Redis) 실험
 - 역할(Role) 기반 접근 제어(RBAC) 적용
 - mysql DB변경
+- TypeORM: 데코레이터 기반 엔티티, Active Record/Repository(Data Mapper) 둘 다 지원, 마이그레이션 자동 생성 지원이 강점.
+  Sequelize: 성숙하고 다이얼렉트 폭넓음(예: Snowflake/Redshift), 모델/쿼리 작성이 직관적. 현재 v6 안정, v7 알파 진행 중.
