@@ -1,13 +1,13 @@
 # Express-Authorization 모노레포
 
-JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포입니다.
+JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용 모노레포입니다.
 
 ## 빠른 시작
 
 - 설치: `pnpm install`
-- JWT 서버 실행: `pnpm start:jwt` (포트 4000)
-- Passport 서버 실행: `pnpm start:passport` (포트 3500)
-- 개발 모드(자동 재실행): `pnpm -F @apps/jwt dev`, `pnpm -F @apps/passport dev`
+- JWT 서버 실행: `pnpm -F @apps/jwt dev` (포트 4000)
+- Passport 서버 실행: `pnpm -F @apps/passport dev` (포트 3500)
+- TypeORM 서버 실행: `pnpm -F @apps/typeorm dev` (포트 5050)
 
 ## 디렉터리 구조
 
@@ -15,28 +15,36 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 .
 ├── apps/
 │   ├── jwt/
-│   │   ├── index.js          # JWT 서버 (4000)
-│   │   ├── .env              # ACCESS/REFRESH 토큰 시크릿
+│   │   ├── index.js              # JWT 서버 (4000)
+│   │   ├── .env                  # ACCESS/REFRESH 토큰 시크릿
 │   │   └── package.json
-│   └── passport/
-│       ├── index.js          # Passport(Local/OAuth) 서버 (3500)
-│       ├── config/
-│       │   └── passport.js   # Local + Google + Kakao 전략 설정
-│       ├── controllers/
-│       │   ├── users.controller.js
-│       │   └── posts.controller.js (stub)
-│       ├── routes/
-│       │   ├── main.router.js
-│       │   └── users.router.js
-│       ├── models/
-│       │   └── users.model.js
-│       ├── middlewares/
-│       │   └── auth.js
-│       ├── views/            # EJS 템플릿
-│       ├── public/           # 정적 파일
+│   ├── passport/
+│   │   ├── index.js              # Passport(Local/OAuth) 서버 (3500)
+│   │   ├── config/
+│   │   │   └── passport.js       # Local + Google + Kakao 전략 설정
+│   │   ├── controllers/
+│   │   │   ├── users.controller.js
+│   │   │   └── posts.controller.js (stub)
+│   │   ├── routes/
+│   │   │   ├── main.router.js
+│   │   │   └── users.router.js
+│   │   ├── models/
+│   │   │   └── users.model.js
+│   │   ├── middlewares/
+│   │   │   └── auth.js
+│   │   ├── views/                # EJS 템플릿
+│   │   ├── public/               # 정적 파일
+│   │   └── package.json
+│   └── typeORM/
+│       ├── docker-compose.yml    # Postgres (5432)
+│       ├── src/
+│       │   ├── index.ts          # TypeORM 서버 (5050)
+│       │   ├── data-source.ts    # DB 연결 설정
+│       │   └── entity/
+│       │       └── User.ts       # status 컬럼(소프트 삭제)
 │       └── package.json
-├── package.json               # 루트 스크립트
-├── pnpm-workspace.yaml        # 워크스페이스 설정
+├── package.json                   # 루트 스크립트
+├── pnpm-workspace.yaml            # 워크스페이스 설정
 └── pnpm-lock.yaml
 ```
 
@@ -130,6 +138,29 @@ JWT(4000)와 Passport(3500)를 각각 앱으로 분리한 학습용 모노레포
 - MongoDB users 컬렉션(구글 로그인, 비밀번호 제거):
 
   ![MongoDB Data (Google Login)](apps/passport/public/mogodata.png)
+
+### apps/typeORM (포트 5050)
+
+- 데이터베이스: Postgres (Docker Compose 포함)
+- 서버 시작: `pnpm -F @apps/typeorm dev` → http://localhost:5050/
+- Docker로 Postgres 실행
+  - 명령어: `cd apps/typeORM && docker compose up -d`
+  - 설정: `apps/typeORM/docker-compose.yml`
+  - 접속 정보: `postgres/password`, DB `Test` (포트 5432)
+- TypeORM 설정: `apps/typeORM/src/data-source.ts` (`synchronize: true`)
+- 엔티티: `apps/typeORM/src/entity/User.ts`
+  - 필드: `id`, `firstName`, `lastName`, `age`, `status('ACTIVE'|'DELETED')`
+- API 개요
+  - `GET /users`: 활성 사용자만 반환(status = ACTIVE, 또는 레거시 null)
+  - `GET /users/:id`: 삭제된 사용자는 404
+  - `POST /users`: 새 사용자는 항상 `status = ACTIVE`
+  - `PUT /users/:id`: 삭제된 사용자는 수정 불가(404)
+  - `DELETE /users/:id`: 소프트 삭제 → `status = 'DELETED'`
+
+소프트 삭제 정책
+- 실제 레코드는 삭제하지 않고 `status` 값을 `DELETED`로 변경합니다.
+- 조회 시에는 `ACTIVE`(또는 과거 데이터의 `NULL`)만 노출합니다.
+- 필요 시 복구는 `status = 'ACTIVE'`로 되돌리면 됩니다.
 
 ## 참고 사항
 

@@ -137,3 +137,11 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# TypeORM
+apps/typeORM/data
+apps/typeORM/docker-compose.yml
+apps/typeORM/.env
+apps/typeORM/yarn.lock
+apps/typeORM/package-lock.json
+apps/typeORM/pnpm-lock.yaml
