@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:jwt": "pnpm -F @apps/jwt dev",
     "dev:passport": "pnpm -F @apps/passport dev",
-    "dev:orm": "pnpm -F @apps/typeorm dev"
+    "dev:orm": "pnpm -F @apps/typeorm dev",
+    "dev:graphql": "pnpm -F @apps/graphql dev"
   },
   "keywords": [],
   "author": "",
