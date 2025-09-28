@@ -1,27 +1,31 @@
+import { loadFilesSync } from "@graphql-tools/load-files";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
-import { buildSchema } from "graphql";
+// import { buildSchema } from "graphql";
 
 const app = express();
 
-const schema = buildSchema(`
-  type Query {
-    ping: String!
-  }
-`);
+const loadedTypes = loadFilesSync("./**/*", {
+  extensions: [".graphql"],
+});
 
-const rootValue = {
-  ping: () => "pong",
-};
+const loadedResolvers = loadFilesSync("./**/*", {
+  extensions: [".resolvers.ts", ".resolvers.js"],
+});
+
+const schema = makeExecutableSchema({
+  typeDefs: loadedTypes,
+  resolvers: loadedResolvers,
+});
 
 const port = Number.parseInt(process.env.PORT ?? "5055", 10);
 
 app.use(
   "/graphql",
   graphqlHTTP({
-    schema,
-    rootValue,
-    graphiql: process.env.NODE_ENV !== "production",
+    schema: schema,
+    graphiql: true,
   })
 );
 
@@ -30,5 +34,5 @@ app.listen(port, () => {
 });
 
 app.get("/", (_req, res) => {
-  res.send("서버 올라감");
+  res.send("GraphQL service running on port " + port);
 });

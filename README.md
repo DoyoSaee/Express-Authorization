@@ -8,6 +8,7 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
 - JWT 서버 실행: `pnpm -F @apps/jwt dev` (포트 4000)
 - Passport 서버 실행: `pnpm -F @apps/passport dev` (포트 3500)
 - TypeORM 서버 실행: `pnpm -F @apps/typeorm dev` (포트 5050)
+- GraphQL 서버 실행: `pnpm dev:graphql` (포트 5055)
 
 ## 디렉터리 구조
 
@@ -17,6 +18,12 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
 │   ├── jwt/
 │   │   ├── index.js              # JWT 서버 (4000)
 │   │   ├── .env                  # ACCESS/REFRESH 토큰 시크릿
+│   │   └── package.json
+│   ├── graphQL/
+│   │   ├── src/
+│   │   │   ├── index.ts          # GraphQL 서버 진입점 (5055)
+│   │   │   ├── posts/            # Post 타입 정의 + 리졸버
+│   │   │   └── comments/         # Comment 타입 정의 + 리졸버
 │   │   └── package.json
 │   ├── passport/
 │   │   ├── index.js              # Passport(Local/OAuth) 서버 (3500)
@@ -62,7 +69,68 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
 - 요청 예시
   - 로그인: `POST http://localhost:4000/login` body: `{ "userName": "user1" }`
   - 갱신: `POST http://localhost:4000/refresh` (쿠키 자동 전송 필요)
-  - 조회: `GET http://localhost:4000/posts` 헤더: `Authorization: Bearer <token>`
+- 조회: `GET http://localhost:4000/posts` 헤더: `Authorization: Bearer <token>`
+
+### apps/graphQL (포트 5055)
+
+- 실행: `pnpm dev:graphql` (내부적으로 `pnpm -F @apps/graphql dev` 실행)
+- 엔드포인트: `http://localhost:5055/graphql` (GraphiQL UI 포함)
+- 스키마 개요
+  - `Query`
+    - `posts`: 모든 게시글과 연결된 댓글 목록 반환
+    - `postById(id: ID!)`: 단일 게시글 조회
+    - `comments`: 전체 댓글 조회
+    - `commentById(id: ID!)`: 댓글 단일 조회
+    - `commentByPostId(id: ID!)`: 특정 게시글에 연결된 댓글(데모용)
+    - `commentByLikes(minLikes: Int!)`: 좋아요 수 필터링
+  - `Mutation`
+    - `addPost(post: PostInput!)`: 게시글 추가 (ID 미지정 시 자동 증가)
+    - `addComment(comment: CommentInput!)`: 댓글 추가 (기본 좋아요 0)
+- 예시 요청 (GraphiQL / HTTP POST)
+
+```graphql
+query PostsWithComments {
+  posts {
+    id
+    title
+    comments {
+      id
+      text
+      likes
+    }
+  }
+}
+
+query PopularComments {
+  commentByLikes(minLikes: 5) {
+    id
+    text
+    likes
+  }
+}
+
+mutation CreatePost {
+  addPost(
+    post: { title: "GraphQL 예시", description: "자동 ID와 함께 저장" }
+  ) {
+    id
+    title
+    description
+  }
+}
+
+mutation CreateCommentWithCustomId {
+  addComment(
+    comment: { id: "custom-comment", text: "직접 지정한 아이디", likes: 3 }
+  ) {
+    id
+    text
+    likes
+  }
+}
+```
+
+> **TIP**: GraphiQL에서 예시 쿼리를 붙여넣고 ⌘⏎(macOS) 또는 Ctrl+Enter(Windows/Linux)로 실행할 수 있습니다.
 
 ### apps/passport (포트 3500)
 
