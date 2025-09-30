@@ -8,7 +8,7 @@ const comments: CommentRecord[] = [
   {
     id: "comment1",
     text: "Comment Text  1",
-    likes: 10,
+    likes: 11,
   },
   {
     id: "comment2",
