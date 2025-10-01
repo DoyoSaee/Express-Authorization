@@ -74,6 +74,7 @@ JWT(4000), Passport(3500), TypeORM(5050)을 각각 앱으로 분리한 학습용
 ### apps/graphQL (포트 5055)
 
 - 실행: `pnpm dev:graphql` (내부적으로 `pnpm -F @apps/graphql dev` 실행)
+- 런타임: Apollo Server 기반 GraphQL 서비스
 - 엔드포인트: `http://localhost:5055/graphql` (GraphiQL UI 포함)
 - 스키마 개요
   - `Query`
