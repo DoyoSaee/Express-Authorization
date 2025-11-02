@@ -139,6 +139,9 @@ mutation CreateCommentWithCustomId {
   - `MONGODB_URI`: MongoDB 연결 문자열
 - LocalStrategy 데모(세션/뷰 사용)
 - 엔드포인트 예시: 로그인/회원가입/성공 페이지 등
+- 실시간 채팅 데모
+  - MongoDB에 채팅 메시지를 저장하고 로그인한 세션 기준으로 개인화된 대화 기록을 불러옵니다.
+  - 여러 브라우저/세션 간 메시지 교환 시 즉시 알림과 실시간 UI 갱신을 확인할 수 있습니다.
 - 확장 아이디어
   - 세션/쿠키 기반 로그인 고도화(`passport.session()`, serialize/deserialize)
   - OAuth 추가(Google, Kakao)
@@ -207,6 +210,22 @@ mutation CreateCommentWithCustomId {
 - MongoDB users 컬렉션(구글 로그인, 비밀번호 제거):
 
   ![MongoDB Data (Google Login)](apps/passport/public/mogodata.png)
+
+- 실시간 채팅 로그인 화면:
+
+  ![Chat Login](apps/passport/public/pc2.png)
+
+- 로그인 후 채팅방 화면:
+
+  ![Chat Room](apps/passport/public/pc3.png)
+
+- 다른 세션에서 온 새 메시지 알림:
+
+  ![Chat Notification](apps/passport/public/pc4.png)
+
+- 실시간으로 진행 중인 세션 간 대화:
+
+  ![Live Conversation](apps/passport/public/pc5.png)
 
 ### apps/typeORM (포트 5050)
 
